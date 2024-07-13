@@ -1,5 +1,6 @@
 import Yup from "yup";
 import Course from "./course.model.js";
+import mongoose from "mongoose";
 
 export const validateCourse = async (req, res, next) => {
   const courseValidationSchema = Yup.object({
@@ -30,4 +31,44 @@ export const addCourse = async (req, res) => {
   return res
     .status(200)
     .send({ message: "Course has been added successfully..." });
+};
+
+export const validateMongoId = (req, res, next) => {
+  //* check valid id
+
+  // extract id from req.params
+  const id = req.params.id;
+
+  // check for mongo id validity
+  const isValidId = mongoose.isValidObjectId(id);
+
+  // if not valid throw error
+  if (!isValidId) {
+    return res.status(400).send({ message: "Invalid ID!" });
+  }
+
+  next();
+};
+
+export const deleteCourse = async (req, res) => {
+  //* delete course of that id
+
+  // extract course id from req.params
+  const courseId = req.params.id;
+
+  // find course
+  const requiredCourse = await Course.findById(courseId);
+
+  // if not throw error
+  if (!requiredCourse) {
+    return res.status(404).send({ message: "Course not found!" });
+  }
+
+  // delete course
+  await Course.findByIdAndDelete(courseId);
+
+  //res
+  return res
+    .status(200)
+    .send({ message: "Course has been deleted successfully" });
 };
