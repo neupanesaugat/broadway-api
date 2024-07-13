@@ -5,8 +5,6 @@ import {
   validateCourse,
   validateMongoId,
 } from "./course.service.js";
-import mongoose from "mongoose";
-import Course from "./course.model.js";
 
 const router = express.Router();
 
