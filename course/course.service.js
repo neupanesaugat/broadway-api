@@ -72,3 +72,24 @@ export const deleteCourse = async (req, res) => {
     .status(200)
     .send({ message: "Course has been deleted successfully" });
 };
+
+export const updateCourse = async (req, res) => {
+  // extract course id from req.params
+  const courseId = req.params.id;
+  //  find course
+  const course = await Course.findById(courseId);
+
+  // if not course, throw error
+  if (!course) {
+    return res.status(404).send({ message: "Course not found!" });
+  }
+
+  // extract new values from req.body
+  const newCourseValues = req.body;
+
+  // update customer
+  await Course.findByIdAndUpdate(courseId, { ...newCourseValues });
+
+  //send res
+  return res.status(200).send({ message: "Course has been updated..." });
+};
